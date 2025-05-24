@@ -64,7 +64,7 @@ function Chat() {
         autoFocus
         ref={textareaRef}
       />
-      <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+      <Box sx={{ display: 'flex', gap: 2, mb: 2, ml: 'auto' }}>
         <Button variant="outlined" color="neutral" startDecorator={<ClearIcon />} onClick={handleClear} sx={{ fontSize: '1.5rem', fontFamily: 'Verdana' }}>
           Clear
         </Button>

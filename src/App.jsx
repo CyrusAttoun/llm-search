@@ -101,7 +101,7 @@ function AppStepper() {
   const { step, goStep } = useStepRouting();
 
   return (
-    <Box sx={{ width: '100vw', minHeight: '100vh', bgcolor: 'background.body', fontFamily: 'Verdana, Geneva, Tahoma, sans-serif' }}>
+    <Box sx={{ mx: 'auto', minHeight: '100vh', bgcolor: 'background.body', fontFamily: 'Verdana, Geneva, Tahoma, sans-serif' }}>
       <Navigation step={step} goStep={goStep} steps={steps} />
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh', width: '100%' }}>
         {step === 0 && <GettingStarted />}
