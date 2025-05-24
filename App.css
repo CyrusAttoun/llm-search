@@ -3,8 +3,14 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  position: fixed;
+  top: 10%;
+  left: 10%;
+  width: 80vw;
+  height: 80vh;
+  z-index: 0;
   pointer-events: none;
+  opacity: 0.2;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -14,6 +20,8 @@
 }
 
 .App-header {
+  position: relative;
+  z-index: 1;
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
