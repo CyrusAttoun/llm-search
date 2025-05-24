@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import Stepper from '@mui/joy/Stepper';
 import Step from '@mui/joy/Step';
@@ -10,8 +10,9 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Box from '@mui/joy/Box';
 import Chat from './Chat';
 import GettingStarted from './GettingStarted';
-import SettingsPanel from './SettingsPanel';
+import SettingsPanel from './Settings';
 import BrowserSetup from './BrowserSetup';
+import './App.css';
 
 const LOCAL_KEY = 'openai_config';
 

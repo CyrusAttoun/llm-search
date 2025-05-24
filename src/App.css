@@ -52,3 +52,13 @@
    
   }
 }
+
+.step-content {
+    align-self: flex-start;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 80%;    
+}

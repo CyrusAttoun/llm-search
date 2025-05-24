@@ -1,10 +1,9 @@
-import React from 'react';
 import Sheet from '@mui/joy/Sheet';
 import Typography from '@mui/joy/Typography';
 
 export default function BrowserSetup() {
-  return (
-    <Sheet sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', height: '80%' }}>
+  return (    
+    <Sheet className="step-content">
       <Typography level="h2" sx={{ mb: 3, fontSize: '2.5rem', fontFamily: 'Verdana', fontWeight: 700 }}>Browser Setup</Typography>
       <Sheet variant="soft" sx={{ p: 2, mb: 2, borderRadius: 6, width: '100%' }}>
         <Typography level="h4" sx={{ fontSize: '1.5rem', fontFamily: 'Verdana', fontWeight: 700 }}>Firefox</Typography>

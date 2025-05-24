@@ -1,8 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import IconButton from '@mui/joy/IconButton';
-import SettingsIcon from '@mui/icons-material/Settings';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import Input from '@mui/joy/Input';
+import { useEffect, useRef, useState } from 'react';
 import Sheet from '@mui/joy/Sheet';
 import { useLocation } from 'react-router-dom';
 import Typography from '@mui/joy/Typography';
@@ -54,8 +50,8 @@ function Chat() {
     }
   };
 
-  return (
-    <Sheet variant="outlined" sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '80%', height: '80%', maxWidth: 700, mx: 'auto', mt: 8, position: 'relative' }}>
+  return (    
+    <Sheet className="step-content">
       <Typography level="h2" sx={{ mb: 2, fontSize: '2.5rem', fontFamily: 'Verdana', fontWeight: 700 }}>Chat</Typography>
       <Textarea
         minRows={4}
