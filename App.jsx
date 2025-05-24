@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import Tabs from '@mui/joy/Tabs';
-import TabList from '@mui/joy/TabList';
-import Tab from '@mui/joy/Tab';
-import TabPanel from '@mui/joy/TabPanel';
-import IconButton from '@mui/joy/IconButton';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Stepper from '@mui/joy/Stepper';
+import Step from '@mui/joy/Step';
+import StepIndicator from '@mui/joy/StepIndicator';
+import SettingsIcon from '@mui/icons-material/Settings';
+import InfoIcon from '@mui/icons-material/Info';
+import BrowserUpdatedIcon from '@mui/icons-material/BrowserUpdated';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Box from '@mui/joy/Box';
 import Chat from './Chat';
 import GettingStarted from './GettingStarted';
@@ -15,61 +15,99 @@ import BrowserSetup from './BrowserSetup';
 
 const LOCAL_KEY = 'openai_config';
 
-const tabRoutes = ['/getting-started', '/settings', '/browser-setup', '/chat'];
+const steps = [
+  { label: 'Start', icon: <InfoIcon />, route: '/getting-started' },
+  { label: 'Settings', icon: <SettingsIcon />, route: '/settings' },
+  { label: 'Browser', icon: <BrowserUpdatedIcon />, route: '/browser-setup' },
+  { label: 'Chat', icon: <ChatBubbleIcon />, route: '/chat' },
+];
 
-function getInitialTab() {
+function getInitialStep() {
   const config = localStorage.getItem(LOCAL_KEY);
   try {
     if (config && JSON.parse(config).openaiKey) return 3; // Chat
-  } catch {}
+  } catch { }
   return 0; // GettingStarted
 }
 
-function useTabRouting() {
+function useStepRouting() {
   const navigate = useNavigate();
   const location = useLocation();
-  const tabIdx = tabRoutes.findIndex(r => location.pathname.startsWith(r));
-  const [tab, setTab] = useState(tabIdx >= 0 ? tabIdx : getInitialTab());
+  const stepIdx = steps.findIndex(s => location.pathname.startsWith(s.route));
+  const [step, setStep] = useState(stepIdx >= 0 ? stepIdx : getInitialStep());
 
   useEffect(() => {
-    if (tabIdx !== tab) setTab(tabIdx >= 0 ? tabIdx : 0);
+    if (stepIdx !== step) setStep(stepIdx >= 0 ? stepIdx : 0);
     // eslint-disable-next-line
   }, [location.pathname]);
 
-  const goTab = idx => {
-    setTab(idx);
-    navigate(tabRoutes[idx]);
+  const goStep = idx => {
+    setStep(idx);
+    navigate(steps[idx].route);
   };
 
-  return { tab, goTab };
+  return { step, goStep };
 }
 
-function AppTabs() {
-  const { tab, goTab } = useTabRouting();
-  const navigate = useNavigate();
+function Navigation({ step, goStep, steps }) {
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', pt: 4, pb: 4 }}>
+
+      <Stepper orientation="horizontal" sx={{ flex: 0.5, gap: 6 }}>
+
+        {steps.map((s, idx) => (
+          <Step orientation="horizontal" key={s.label} active={step === idx} completed={step > idx} onClick={() => goStep(idx)}>
+            <StepIndicator
+              variant="plain"
+              sx={{
+                color: step === idx ? '#1976d2' : '#888',
+                mb: 1,
+                cursor: 'pointer',
+                fontSize: '2rem',
+                fontWeight: 400,
+                height: 1,
+                display: 'flex',
+
+                alignItems: 'center',
+                "& .icon": {
+                  backgroundColor: 'white',
+                  height: '100%',
+                  width: '100%',
+                  px: 1,
+                },
+                "& .label": {
+                  backgroundColor: 'white',
+                  height: '100%',
+                  pr: 1
+                }
+              }}
+            >
+              <Box className="icon">{s.icon}</Box>
+              <Box className="label">{s.label}</Box>
+            </StepIndicator>
+
+          </Step>
+        ))}
+
+      </Stepper>
+
+
+    </Box>
+  );
+}
+
+function AppStepper() {
+  const { step, goStep } = useStepRouting();
 
   return (
-    <Box sx={{ width: '100vw', minHeight: '100vh', bgcolor: 'background.body' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 2, pt: 2 }}>
-        <IconButton onClick={() => goTab(tab - 1)} disabled={tab === 0} sx={{ alignSelf: 'flex-start' }}>
-          <ArrowBackIcon />
-        </IconButton>
-        <IconButton onClick={() => goTab(tab + 1)} disabled={tab === 3} sx={{ alignSelf: 'flex-end' }}>
-          <ArrowForwardIcon />
-        </IconButton>
+    <Box sx={{ width: '100vw', minHeight: '100vh', bgcolor: 'background.body', fontFamily: 'Verdana, Geneva, Tahoma, sans-serif' }}>
+      <Navigation step={step} goStep={goStep} steps={steps} />
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh', width: '100%' }}>
+        {step === 0 && <GettingStarted />}
+        {step === 1 && <SettingsPanel onSaved={() => goStep(2)} />}
+        {step === 2 && <BrowserSetup />}
+        {step === 3 && <Chat />}
       </Box>
-      <Tabs orientation="vertical" value={tab} onChange={(_, v) => goTab(v)} sx={{ display: 'flex', flexDirection: 'row', height: '80vh', mt: 2 }}>
-        <TabList sx={{ minWidth: 200, borderRight: '1px solid #eee', bgcolor: 'background.level1' }}>
-          <Tab>Getting Started</Tab>
-          <Tab>Settings</Tab>
-          <Tab>Browser Setup</Tab>
-          <Tab>Chat</Tab>
-        </TabList>
-        <TabPanel value={0} sx={{ flex: 1 }}><GettingStarted /></TabPanel>
-        <TabPanel value={1} sx={{ flex: 1 }}><SettingsPanel onSaved={() => goTab(2)} /></TabPanel>
-        <TabPanel value={2} sx={{ flex: 1 }}><BrowserSetup /></TabPanel>
-        <TabPanel value={3} sx={{ flex: 1 }}><Chat /></TabPanel>
-      </Tabs>
     </Box>
   );
 }
@@ -78,9 +116,10 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/*" element={<AppTabs />} />
-        <Route path="*" element={<Navigate to={tabRoutes[getInitialTab()]} replace />} />
+        <Route path="/*" element={<AppStepper />} />
+        <Route path="*" element={<Navigate to={steps[getInitialStep()].route} replace />} />
       </Routes>
     </Router>
   );
 }
+
