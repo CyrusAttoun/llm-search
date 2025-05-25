@@ -33,7 +33,9 @@ export default function Settings({ onSaved }) {
     <Sheet className="step-content">
       <Typography level="h2" sx={{ mb: 2, fontSize: '2.5rem', fontFamily: 'Verdana', fontWeight: 700 }}>Settings</Typography>
       <Typography sx={{ mb: 3, fontSize: '1.5rem', fontFamily: 'Verdana' }}>
-        Enter your OpenAI API key below. This key is used to connect to your preferred LLM provider securely and privately; your keys are ever stored on any server.
+        Enter your OpenAI API key below. 
+        This key is used to connect to your preferred LLM provider securely and privately; 
+        your keys are <strong>never</strong> stored on any server.
         <br /><br/>
         To obtain an OpenAI API key, go to https://platform.openai.com/signup and create a free account. 
         Once logged in, navigate to the API keys section under your account settings to generate a new key.
