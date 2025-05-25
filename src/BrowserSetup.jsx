@@ -7,9 +7,7 @@ export default function BrowserSetup() {
             <Typography level="h2" sx={{ mb: 3, fontSize: '2.5rem', fontFamily: 'Verdana', fontWeight: 700 }}>Browser Setup</Typography>
             <Sheet variant="soft" sx={{ p: 2, mb: 2, borderRadius: 6, width: '100%' }}>
                 <Typography level="h4" sx={{ fontSize: '1.5rem', fontFamily: 'Verdana', fontWeight: 700 }}>Firefox</Typography>
-                <Typography level="body-md" sx={{ fontSize: '1.5rem', fontFamily: 'Verdana' }}>
-                    <del>Go to <b>Settings &gt; Search &gt; Add search engine</b> and paste the OpenSearch URL from this site. Or, click the search bar dropdown and select "Add “LLM Search”" if prompted.</del>
-                    <br/><br/>
+                <Typography level="body-md" sx={{ fontSize: '1.5rem', fontFamily: 'Verdana' }}>                    
                     <ol>
                         <li>go to about:config</li>
                         <li>add a new key for  browser.urlbar.update2.engineAliasRefresh with the value true</li>
