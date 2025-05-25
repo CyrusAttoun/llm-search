@@ -27,8 +27,13 @@ const STEPS = [
 function getInitialStep() {
     const config = localStorage.getItem(LOCAL_KEY);
     try {
-        if (config && JSON.parse(config).openaiKey) return 3; // Chat
-    } catch { }
+        console.log('config', config)
+        if (config && JSON.parse(config).openaiKey) {            
+            return 3; // Chat
+        }
+    } catch { 
+        console.log('error');
+    }
     return 0; // GettingStarted
 }
 
@@ -43,6 +48,14 @@ function AppStepper() {
         if (stepIdx !== step) setStep(stepIdx >= 0 ? stepIdx : 0);
         // eslint-disable-next-line
     }, [location.pathname]);
+
+    useEffect(() => {
+        // On mount, if the current path does not match the expected step route, navigate to it
+        const expectedRoute = STEPS[step].route;
+        if (!location.pathname.startsWith(expectedRoute)) {
+            navigate(expectedRoute + location.search, { replace: true });
+        }
+    }, []); // Only run on mount
 
     function goStep(idx) {
         setStep(idx);

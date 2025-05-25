@@ -90,7 +90,7 @@ function Chat() {
         <Sheet className="step-content">
             <Typography level="h2" sx={{ mb: 2, fontSize: '2.5rem', fontFamily: 'Verdana', fontWeight: 700 }}>Chat</Typography>
             <Textarea
-                id="query"
+                defaultValue={query}
                 minRows={4}
                 maxRows={8}
                 onKeyDown={handleKeyDown}
