@@ -7,6 +7,8 @@ import Button from '@mui/joy/Button';
 import Box from '@mui/joy/Box';
 import ClearIcon from '@mui/icons-material/Clear';
 import SendIcon from '@mui/icons-material/Send';
+import { ChatOpenAI } from "@langchain/openai";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 function getQueryValue() {
   const params = new URLSearchParams(window.location.search);
@@ -19,6 +21,8 @@ function Chat() {
   const textareaRef = useRef(null);
   const [query, setQuery] = useState(getQueryValue());
   const [showResult, setShowResult] = useState(false);
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -29,17 +33,58 @@ function Chat() {
     }
   }, [location.search]);
 
+  useEffect(() => {
+    const fetchCompletion = async () => {
+      if (!query.trim()) {
+        setResult("");
+        setShowResult(false);
+        return;
+      }
+      const config = localStorage.getItem("openai_config");
+      let openaiKey = "";
+      if (config) {
+        try {
+          openaiKey = JSON.parse(config).openaiKey || "";
+        } catch {}
+      }
+      if (!openaiKey) {
+        setResult("No OpenAI API key found. Please set it in Settings.");
+        setShowResult(true);
+        return;
+      }
+      setLoading(true);
+      setShowResult(true);
+      try {
+        const chat = new ChatOpenAI({
+          openAIApiKey: openaiKey,
+          modelName: "gpt-4.1",
+        });
+        const response = await chat.invoke([
+          new HumanMessage(query)
+        ]);
+        setResult(response.content);
+      } catch (err) {
+        setResult("Error: " + (err?.message || err?.toString() || "Unknown error"));
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (showResult && query.trim()) {
+      fetchCompletion();
+    }
+    // eslint-disable-next-line
+  }, [query, showResult]);
+
   const handleClear = () => {
-    setQuery('');
+    setQuery("");
     setShowResult(false);
+    setResult("");
     if (textareaRef.current) textareaRef.current.focus();
   };
 
   const handleChat = () => {
     if (query.trim()) {
       setShowResult(true);
-      // Dummy function for now
-      console.log('Chat submitted:', query);
     }
   };
 
@@ -75,7 +120,7 @@ function Chat() {
       {showResult && (
         <Sheet variant="soft" sx={{ width: '80%', flex: 1, overflowY: 'auto', fontSize: '1.5rem', fontFamily: 'Verdana', display: 'flex', alignItems: 'flex-start', mt: 2 }}>
           <Typography sx={{ fontSize: '1.5rem', fontFamily: 'Verdana' }}>
-            (Chat result would appear here.)
+            {loading ? "Loading..." : result || "(No result)"}
           </Typography>
         </Sheet>
       )}
