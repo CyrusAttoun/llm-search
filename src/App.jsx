@@ -17,64 +17,64 @@ import './App.css';
 
 const LOCAL_KEY = 'openai_config';
 
-const steps = [
-  { label: 'Start', icon: <InfoIcon />, route: '/getting-started' },
-  { label: 'Settings', icon: <SettingsIcon />, route: '/settings' },
-  { label: 'Browser', icon: <BrowserUpdatedIcon />, route: '/browser-setup' },
-  { label: 'Chat', icon: <ChatBubbleIcon />, route: '/chat' },
+const STEPS = [
+    { label: 'Start', icon: <InfoIcon />, route: '/getting-started' },
+    { label: 'Settings', icon: <SettingsIcon />, route: '/settings' },
+    { label: 'Browser', icon: <BrowserUpdatedIcon />, route: '/browser-setup' },
+    { label: 'Chat', icon: <ChatBubbleIcon />, route: '/chat' },
 ];
 
 function getInitialStep() {
-  const config = localStorage.getItem(LOCAL_KEY);
-  try {
-    if (config && JSON.parse(config).openaiKey) return 3; // Chat
-  } catch { }
-  return 0; // GettingStarted
-}
-
-function useStepRouting() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const stepIdx = steps.findIndex(s => location.pathname.startsWith(s.route));
-  const [step, setStep] = useState(stepIdx >= 0 ? stepIdx : getInitialStep());
-
-  useEffect(() => {
-    if (stepIdx !== step) setStep(stepIdx >= 0 ? stepIdx : 0);
-    // eslint-disable-next-line
-  }, [location.pathname]);
-
-  const goStep = idx => {
-    setStep(idx);
-    navigate(steps[idx].route);
-  };
-
-  return { step, goStep };
+    const config = localStorage.getItem(LOCAL_KEY);
+    try {
+        if (config && JSON.parse(config).openaiKey) return 3; // Chat
+    } catch { }
+    return 0; // GettingStarted
 }
 
 function AppStepper() {
-  const { step, goStep } = useStepRouting();
 
-  return (
-    <Box sx={{ mx: 'auto', minHeight: '100vh', bgcolor: 'background.body', fontFamily: 'Verdana, Geneva, Tahoma, sans-serif' }}>
-      <Navigation step={step} goStep={goStep} steps={steps} />
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh', width: '100%' }}>
-        {step === 0 && <GettingStarted />}
-        {step === 1 && <SettingsPanel onSaved={() => goStep(2)} />}
-        {step === 2 && <BrowserSetup />}
-        {step === 3 && <Chat />}
-      </Box>
-    </Box>
-  );
+    const navigate = useNavigate();
+    const location = useLocation();
+    const stepIdx = STEPS.findIndex(s => location.pathname.startsWith(s.route));
+    const [step, setStep] = useState(stepIdx >= 0 ? stepIdx : getInitialStep());
+
+    useEffect(() => {
+        if (stepIdx !== step) setStep(stepIdx >= 0 ? stepIdx : 0);
+        // eslint-disable-next-line
+    }, [location.pathname]);
+
+    function goStep(idx) {
+        setStep(idx);
+        navigate(STEPS[idx].route);
+    };
+
+    function handleSaved() {
+        goStep(2)
+    }
+
+    return (
+        <Box sx={{ mx: 'auto', minHeight: '100vh', bgcolor: 'background.body', fontFamily: 'Verdana, Geneva, Tahoma, sans-serif' }}>
+            <Navigation step={step} goStep={goStep} steps={STEPS} />
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh', width: '100%' }}>
+                {step === 0 && <GettingStarted />}
+                {step === 1 && <SettingsPanel onSaved={handleSaved} />}
+                {step === 2 && <BrowserSetup />}
+                {step === 3 && <Chat />}
+            </Box>
+        </Box>
+    );
 }
 
 export default function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/*" element={<AppStepper />} />
-        <Route path="*" element={<Navigate to={steps[getInitialStep()].route} replace />} />
-      </Routes>
-    </Router>
-  );
+    
+    return (
+        <Router>
+            <Routes>
+                <Route path="/*" element={<AppStepper />} />
+                <Route path="*" element={<Navigate to={STEPS[getInitialStep()].route} replace />} />
+            </Routes>
+        </Router>
+    );
 }
 

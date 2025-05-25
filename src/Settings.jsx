@@ -17,7 +17,7 @@ export default function Settings({ onSaved }) {
       try {
         const parsed = JSON.parse(config);
         return parsed.openaiKey || '';
-      } catch {}
+      } catch { }
     }
     return '';
   });
